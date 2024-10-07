@@ -30,3 +30,8 @@ Dentro del repositorio se incluye un manual de usuario que detalla el uso de la 
 MM - Manual de usuario - V01.docx
 
 Este manual contiene información detallada sobre cómo utilizar la aplicación web.
+
+
+## IOT
+Dentro del repositorio ademas se incluye una carpeta con el codigo para la implementacion de un controlador ESP8266 como dispositivo de votacion. Este constara de 3 botones, cada uno con su id asignado que enviara mediante POST a el endpoint para sumar 1 voto a la lista definida.
+Dentro del codigo solo falta definir el SSID del WIFI y la CLAVE para que el mismotenga acceso a la red. Ademas se puede parametrisar el ENDPOINT dependiendo de donde se aloje y via que DNS se dese acceder. 
