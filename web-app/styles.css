@@ -1,0 +1,14 @@
+/* Logo alineado a la izquierda */
+.logo {
+    height: 50px;
+}
+
+/* Espaciado de las tablas */
+table {
+    width: 100%;
+}
+
+/* Estilos del acordeón */
+#listasAccordion .card-header {
+    background-color: #f8f9fa;
+}

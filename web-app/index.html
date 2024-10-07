@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Votación y Listas Postulantes</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="styles.css">
+        
+</head>
+<body>
+    <!-- Barra de navegación -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">
+            <img src="logo.png" alt="Logo" class="logo">
+        </a>
+        <div class="ml-auto">
+            <button class="btn btn-outline-primary" type="button">Inicio</button>
+        </div>
+    </nav>
+
+    <!-- Cuerpo de la página -->
+    <div class="container mt-5">
+        <!-- Primera tabla: Votaciones -->
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Votaciones</h5>
+                <button class="btn btn-success" id="addVotacion">Agregar Votación</button>
+            </div>
+            <div class="card-body">
+                <table class="table table-striped" id="votacionesTable">
+                    <thead>
+                        <tr>
+                            <th>IdVotacion</th>
+                            <th>Summary</th>
+                            <th>Escaño Total</th>
+                            <th>Status</th>
+                            <th>Select</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Los datos se llenarán con AJAX -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Segunda tabla: Listas Postulantes -->
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Listas Postulantes</h5>
+                <button class="btn btn-success" id="addLista">Agregar Lista</button>
+            </div>
+            <div class="card-body">
+                <div id="listasAccordion">
+                    <!-- Los datos se llenarán con AJAX, en formato de acordeón -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para agregar votación -->
+    <div class="modal fade" id="addVotacionModal" tabindex="-1" aria-labelledby="addVotacionModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addVotacionModalLabel">Agregar Votación</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="summary" class="form-label">Summary</label>
+                        <input type="text" class="form-control" id="summary" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="escanio_total" class="form-label">Escaño Total</label>
+                        <input type="number" class="form-control" id="escanio_total" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="guardarVotacion">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para agregar lista -->
+    <div class="modal fade" id="addListaModal" tabindex="-1" aria-labelledby="addListaModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addListaModalLabel">Agregar Lista</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="idVotacion" class="form-label">Seleccionar Votación</label>
+                        <select class="form-select selectListas" id="selectListas" required>
+                            <option value="">Seleccione una votación</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="summary" class="form-label">Summary</label>
+                        <input type="text" class="form-control lista-summary" id="lista-summary" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Descripción</label>
+                        <textarea class="form-control" id="description" rows="3" required></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="guardarLista">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+        
+    <!-- Modal para mostrar listas -->
+    <div class="modal fade" id="modalListas" tabindex="-1" aria-labelledby="modalListasLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalListasLabel">Listas de la Votación</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="acordeonListas"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary" id="btnAgregarLista" data-bs-toggle="modal" data-bs-target="#modalAgregarLista">AGREGAR LISTA</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para agregar votos -->
+    <div class="modal fade" id="modalVotos" tabindex="-1" aria-labelledby="modalVotosLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalVotosLabel">Agregar Votos</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="inputVotos" class="form-label">Cantidad de Votos</label>
+                        <input type="number" class="form-control" id="inputVotos" placeholder="Ingrese la cantidad de votos">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary save-lista-votos" id="save-lista-votos">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Modal para mensajes genéricos -->
+    <div class="modal fade" id="messageModal" tabindex="-1" role="dialog" aria-labelledby="messageModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="messageModalLabel">Mensaje</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="messageModalBody">
+                    <!-- Aquí se colocará el mensaje -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+    <script src="ws.js"></script>
+</body>
+</html>

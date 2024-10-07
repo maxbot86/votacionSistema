@@ -1,0 +1,28 @@
+version: '3'
+services:
+  ws_app:
+    build:
+      context: ./ws-app  # Ruta donde está tu Dockerfile y código Flask
+      dockerfile: Dockerfile
+    ports:
+      - "5006:5006"
+    networks:
+      - msa_network
+
+  web_app:
+    image: httpd:latest  
+    container_name: apache-web
+    volumes:
+      - ./web-app:/usr/local/apache2/htdocs/
+    ports:
+      - "8080:80"
+    networks:
+      - msa_network
+ 
+
+networks:
+  msa_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.100.0.0/24

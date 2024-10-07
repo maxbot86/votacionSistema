@@ -1,0 +1,7 @@
+sqlalchemy
+flask
+flask_sqlalchemy
+flask_cors
+python-dotenv==1.0.1
+requests
+flask_httpauth
